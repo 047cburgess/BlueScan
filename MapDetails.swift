@@ -176,11 +176,7 @@ struct MapDetails: View {
                             .padding(.leading, 73)
                     }
                     
-                    Button {
-                        print(places)
-                    } label: {
-                        Text("test")
-                    }
+                    
                 }.padding(.leading, 20) // Fin VStack
             }
         }
