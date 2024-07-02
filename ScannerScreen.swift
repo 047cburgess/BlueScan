@@ -5,6 +5,7 @@
 //  Created by Apprenant 133 on 21/06/2024.
 
 
+// PAGE TERMINEE - MINH
 
 import SwiftUI
 import VisionKit
@@ -65,8 +66,10 @@ struct DataScannerRepresentable: UIViewControllerRepresentable {
 
 struct ScannerScreen: View {
     @State var isShowingScanner = true
-    @State private var scannedText = "Hello"
+    @State private var scannedText = "Scannez votre produit"
     @State private var productInfo: String = ""
+    
+    @State private var barCode = ""
 
     func handleScan(result: Result<String, Error>) {
         switch result {
@@ -116,13 +119,13 @@ struct ScannerScreen: View {
                     // Ajout des données
                     let productCategory = product["categories"] as? String ?? "No product category"
                     let productOrigin = product["origins"] as? String ?? "No product origin"
-                    let positiveNutrient = product["positive_nutrients"] as? [String] ?? ["No positive nutrient"]
+                    //let positiveNutrient = product["positive_nutrients"] as? [String] ?? ["No positive nutrient"]
                     let nutriscore = product["nutriscore_grade"] as? String ?? "No nutriscore"
                     let packaging = product["packaging"] as? String ?? "No packaging"
                     let productQuantity = product["quantity"] as? String ?? "No quantity"
                     
                     
-                    let info = "Name: \(productName)\nIngredients: \(ingredients)\nCategories: \(productCategory)\nOrigine: \(productOrigin)\nNutriments: \(positiveNutrient)\nNutriscore: \(nutriscore)\nPackaging: \(packaging)\nQuantité: \(productQuantity)"
+                    let info = "\(productName)\n\nOrigine: \(productOrigin)\n\nNutriscore: \(nutriscore)\n\nPackaging: \(packaging)"
                     
                     print("Product info: \(info)")  // Debugging
                     completion(.success(info))
@@ -137,37 +140,381 @@ struct ScannerScreen: View {
         }.resume()
     }
 
+    
+// Test Modal
+    @State private var showModal: Bool = false
+    @State private var modalGood: Bool = false
+    
     var body: some View {
-        if DataScannerViewController.isSupported && DataScannerViewController.isAvailable {
-            ZStack(alignment: .bottom) {
-                DataScannerRepresentable(
-                    shouldStartScanning: $isShowingScanner,
-                    scannedText: $scannedText,
-                    dataToScanFor: [.barcode(symbologies: [.ean13, .code128, .upce])],
-                    handleScan: handleScan
-                )
-                
-                VStack {
-                    Text(scannedText)
-                        .padding()
-                        .background(Color.white)
-                        .foregroundColor(.black)
+        
+            
+            if DataScannerViewController.isSupported && DataScannerViewController.isAvailable {
+                ZStack(alignment: .bottom) {
+                    DataScannerRepresentable(
+                        shouldStartScanning: $isShowingScanner,
+                        scannedText: $scannedText,
+                        dataToScanFor: [.barcode(symbologies: [.ean13, .code128, .upce])],
+                        handleScan: handleScan
+                    )
                     
-                    Text(productInfo)
-                        .padding()
-                        .background(Color.white)
-                        .foregroundColor(.black)
-                    
-                    Text("")
+                        
+                        VStack {
+                            Text(scannedText)
+                                .padding()
+                                .background(Color.white)
+                                .foregroundColor(.customOrange)
+                                .bold()
+                            
+                        }
+
+                }.onChange(of: scannedText) { newValue in
+                    if newValue == "3263670237818" {
+                        showModal = true
+                    } else {
+                        modalGood = true
+                    }
                 }
+                .sheet(isPresented: $showModal) {
+                    
+                    NavigationStack {
+                        
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(.secondary)
+                            .frame(width: 50, height: 5)
+                            .padding(.top, 20)
+                        
+                        Image("maquereaux")
+                            .resizable()
+                            .frame(width: 350, height: 250)
+                        
+                        Text(productInfo)
+                            .foregroundColor(.customBleu)
+                        
+                        Spacer()
+                        
+                        Text("Pêche durable")
+                            .font(.custom("Poppins-Bold", size: 20))
+                            .bold()
+                            .foregroundColor(.customOrange)
+                        
+                        HStack {
+                            Text("Etat de la ressource")
+                                .font(.custom("Quicksand_Book", size: 18))
+                                .foregroundColor(.customBleu)
+                            Spacer()
+                            Image(systemName: "exclamationmark.octagon.fill")
+                                .foregroundColor(.red)
+                                .imageScale(.large)
+                            
+                        }.frame(width: 350)
+                        
+                        HStack {
+                            Text("Taille")
+                                .font(.custom("Quicksand_Book", size: 18))
+                                .foregroundColor(.customBleu)
+                            Spacer()
+                            Image(systemName: "exclamationmark.octagon.fill")
+                                .foregroundColor(.red)
+                                .imageScale(.large)
+                            
+                        }.frame(width: 350)
+                        
+                        HStack {
+                            Text("Saison")
+                                .font(.custom("Quicksand_Book", size: 18))
+                                .foregroundColor(.customBleu)
+                            Spacer()
+                            Image(systemName: "exclamationmark.octagon.fill")
+                                .foregroundColor(.red)
+                                .imageScale(.large)
+                            
+                        }.frame(width: 350)
+                        
+                        HStack {
+                            Text("Statut de l'espèce")
+                                .font(.custom("Quicksand_Book", size: 18))
+                                .foregroundColor(.customBleu)
+                            Spacer()
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.green)
+                                .imageScale(.large)
+                            
+                        }.frame(width: 350)
+                        
+                        Spacer()
+                        
+                        Text("Aquaculture")
+                            .font(.custom("Poppins-Bold", size: 20))
+                            .bold()
+                            .foregroundColor(.customOrange)
+                        
+                        HStack {
+                            Text("Alimentation")
+                                .font(.custom("Quicksand_Book", size: 18))
+                                .foregroundColor(.customBleu)
+                            Spacer()
+                            Image(systemName: "exclamationmark.octagon.fill")
+                                .foregroundColor(.red)
+                                .imageScale(.large)
+                            
+                        }.frame(width: 350)
+                        
+                        HStack {
+                            Text("Pratiques d'élevage")
+                                .font(.custom("Quicksand_Book", size: 18))
+                                .foregroundColor(.customBleu)
+                            Spacer()
+                            Image(systemName: "exclamationmark.octagon.fill")
+                                .foregroundColor(.red)
+                                .imageScale(.large)
+                            
+                        }.frame(width: 350)
+                        
+                        HStack {
+                            Text("Impact sur l'environnement")
+                                .font(.custom("Quicksand_Book", size: 18))
+                                .foregroundColor(.customBleu)
+                            Spacer()
+                            Image(systemName: "exclamationmark.octagon.fill")
+                                .foregroundColor(.red)
+                                .imageScale(.large)
+                            
+                        }.frame(width: 350)
+                            .padding(.bottom, 20)
+                        
+                        NavigationLink(destination: proposal()) {
+                            Text("Trouver une alternative")
+                                .font(.custom("Poppins-Bold", size: 15))
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(.customOrange)
+                                .cornerRadius(30)
+                        }
+                    }
+                        
+                    }
+                .sheet(isPresented: $modalGood) {
+                    
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(.secondary)
+                        .frame(width: 50, height: 5)
+                        .padding(.top, 20)
+                    
+                    Image("sardinesProposal")
+                    .resizable()
+                    .frame(width: 400, height: 350)
+                  
+                    
+                    Spacer()
+                    
+                    Text("Pêche durable")
+                        .font(.custom("Poppins-Bold", size: 20))
+                        .bold()
+                        .foregroundColor(.customOrange)
+                    
+                    HStack {
+                        Text("Etat de la ressource")
+                            .font(.custom("Quicksand_Book", size: 18))
+                            .foregroundColor(.customBleu)
+                        Spacer()
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.green)
+                            .imageScale(.large)
+                         
+                    }.frame(width: 350)
+                
+                    HStack {
+                        Text("Taille")
+                            .font(.custom("Quicksand_Book", size: 18))
+                            .foregroundColor(.customBleu)
+                        Spacer()
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.green)
+                            .imageScale(.large)
+                           
+                    }.frame(width: 350)
+                
+                    HStack {
+                        Text("Saison")
+                            .font(.custom("Quicksand_Book", size: 18))
+                            .foregroundColor(.customBleu)
+                        Spacer()
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.green)
+                            .imageScale(.large)
+                          
+                    }.frame(width: 350)
+                
+                    HStack {
+                        Text("Statut de l'espèce")
+                            .font(.custom("Quicksand_Book", size: 18))
+                            .foregroundColor(.customBleu)
+                        Spacer()
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.green)
+                            .imageScale(.large)
+                           
+                    }.frame(width: 350)
+                
+                Spacer()
+                    
+                    Text("Aquaculture")
+                        .font(.custom("Poppins-Bold", size: 20))
+                        .bold()
+                        .foregroundColor(.customOrange)
+                    
+                    HStack {
+                        Text("Alimentation")
+                            .font(.custom("Quicksand_Book", size: 18))
+                            .foregroundColor(.customBleu)
+                        Spacer()
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.green)
+                            .imageScale(.large)
+                          
+                    }.frame(width: 350)
+                
+                    HStack {
+                        Text("Pratiques d'élevage")
+                            .font(.custom("Quicksand_Book", size: 18))
+                            .foregroundColor(.customBleu)
+                        Spacer()
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.green)
+                            .imageScale(.large)
+                   
+                    }.frame(width: 350)
+                
+                    HStack {
+                        Text("Impact sur l'environnement")
+                            .font(.custom("Quicksand_Book", size: 18))
+                            .foregroundColor(.customBleu)
+                        Spacer()
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.green)
+                            .imageScale(.large)
+                          
+                    }.frame(width: 350)
+                }
+                
+                
+            } else if !DataScannerViewController.isSupported {
+                Text("It looks like this device doesn't support the DataScannerViewController")
+            } else {
+                Text("It appears your camera may not be available")
             }
-        } else if !DataScannerViewController.isSupported {
-            Text("It looks like this device doesn't support the DataScannerViewController")
-        } else {
-            Text("It appears your camera may not be available")
+            
         }
+}
+    
+
+struct proposal: View {
+    
+    var body: some View {
+        
+        RoundedRectangle(cornerRadius: 20)
+            .fill(.secondary)
+            .frame(width: 50, height: 5)
+            .padding(.top, 20)
+        
+        Image("sardinesProposal")
+        .resizable()
+        .frame(width: 400, height: 350)
+      
+        
+        Spacer()
+        
+        Text("Pêche durable")
+            .font(.custom("Poppins-Bold", size: 20))
+            .bold()
+            .foregroundColor(.customOrange)
+        
+        HStack {
+            Text("Etat de la ressource")
+                .font(.custom("Quicksand_Book", size: 18))
+                .foregroundColor(.customBleu)
+            Spacer()
+            Image(systemName: "checkmark.circle.fill")
+                .foregroundColor(.green)
+                .imageScale(.large)
+             
+        }.frame(width: 350)
+    
+        HStack {
+            Text("Taille")
+                .font(.custom("Quicksand_Book", size: 18))
+                .foregroundColor(.customBleu)
+            Spacer()
+            Image(systemName: "checkmark.circle.fill")
+                .foregroundColor(.green)
+                .imageScale(.large)
+               
+        }.frame(width: 350)
+    
+        HStack {
+            Text("Saison")
+                .font(.custom("Quicksand_Book", size: 18))
+                .foregroundColor(.customBleu)
+            Spacer()
+            Image(systemName: "checkmark.circle.fill")
+                .foregroundColor(.green)
+                .imageScale(.large)
+              
+        }.frame(width: 350)
+    
+        HStack {
+            Text("Statut de l'espèce")
+                .font(.custom("Quicksand_Book", size: 18))
+                .foregroundColor(.customBleu)
+            Spacer()
+            Image(systemName: "checkmark.circle.fill")
+                .foregroundColor(.green)
+                .imageScale(.large)
+               
+        }.frame(width: 350)
+    
+    Spacer()
+        
+        Text("Aquaculture")
+            .font(.custom("Poppins-Bold", size: 20))
+            .bold()
+            .foregroundColor(.customOrange)
+        
+        HStack {
+            Text("Alimentation")
+                .font(.custom("Quicksand_Book", size: 18))
+                .foregroundColor(.customBleu)
+            Spacer()
+            Image(systemName: "checkmark.circle.fill")
+                .foregroundColor(.green)
+                .imageScale(.large)
+              
+        }.frame(width: 350)
+    
+        HStack {
+            Text("Pratiques d'élevage")
+                .font(.custom("Quicksand_Book", size: 18))
+                .foregroundColor(.customBleu)
+            Spacer()
+            Image(systemName: "checkmark.circle.fill")
+                .foregroundColor(.green)
+                .imageScale(.large)
+       
+        }.frame(width: 350)
+    
+        HStack {
+            Text("Impact sur l'environnement")
+                .font(.custom("Quicksand_Book", size: 18))
+                .foregroundColor(.customBleu)
+            Spacer()
+            Image(systemName: "checkmark.circle.fill")
+                .foregroundColor(.green)
+                .imageScale(.large)
+              
+        }.frame(width: 350)
     }
 }
+
 
 #Preview {
     ScannerScreen()
