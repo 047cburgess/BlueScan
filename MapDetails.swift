@@ -34,6 +34,20 @@ struct MapDetails: View {
         return formatter
     }()
     
+    // PICKER JOURS DE LA SEMAINE
+    //    @State var day1 = Date()
+    //    @State var day2 = Date()
+    //    let dateFormatterDay: DateFormatter = {
+    //        let weekDay = DateFormatter()
+    //        weekDay.dateFormat = "EEEE"
+    //        return weekDay
+    //    }()
+    @State var day1: Int = 1
+    @State var day2: Int = 1
+    
+    let weekdays = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"]
+    
+    
     @State private var newPin: Pin?
     @Binding var places : [Pin]
     
@@ -84,6 +98,45 @@ struct MapDetails: View {
                                 .padding(.trailing, 5)
                             TextField("Entrer l'adresse du lieu", text: $address)
                         }.padding(.bottom, 20)
+                        
+                        // Ajouter les jours d'ouverture
+                        HStack {
+                            Text("Jours")
+                                .foregroundColor(.customOrange)
+                                .bold()
+                                .padding(.trailing, 22)
+                            
+                        
+                                Text("Du")
+                                    .foregroundColor(.customBleu)
+                              
+                                
+                                Picker("", selection: $day1) {
+                                    ForEach(1..<8) { index in
+                                        Text(weekdays[index - 1]).tag(index)
+                                            .foregroundColor(.customBleu)
+                                    }
+                                }
+                                .pickerStyle(MenuPickerStyle())
+                                .frame(width: 117, height: 20)
+                            
+                            
+                          
+                                Text("au")
+                                    .foregroundColor(.customBleu)
+                                 
+                                
+                                Picker("", selection: $day2) {
+                                    ForEach(1..<8) { index in
+                                        Text(weekdays[index - 1]).tag(index)
+                                    }
+                                }
+                                .pickerStyle(MenuPickerStyle())
+                                .frame(width: 117, height: 20)
+                            
+                        }.padding(.bottom, 20)
+                        
+                        
                         
                         // Ajouter les horaires
                         HStack {
@@ -150,13 +203,15 @@ struct MapDetails: View {
                     // Bouton Enregistrer
                     Button {
                         let newPin = Pin(
-                            icon: "fork.and.knife",
+                            icon: "fork.knife",
                             color: .customOrange,
                             tag: 7,
                             image: "sardines",
                             name: resto,
                             address: address,
                             coordinates: CLLocationCoordinate2D(latitude: 48.85533073243431, longitude: 2.3578338546736557),
+                            day1: "11h",
+                            day2: "00h30",
                             openH: dateFormatter.string(from: hours1),
                             closeH: dateFormatter.string(from: hours2),
                             note: starCount,
@@ -205,7 +260,7 @@ struct TagButton: View {
 
 #Preview {
     MapDetails(places: .constant(place))
-    }
+}
 
 
 

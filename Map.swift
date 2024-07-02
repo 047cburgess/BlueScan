@@ -30,6 +30,8 @@ var restaurant0 = Pin(
     name: "Comptoir des Mers",
     address: "1 rue de Turenne, 75004 Paris",
     coordinates: CLLocationCoordinate2D(latitude: 48.85500175578553, longitude: 2.362948181449204),
+    day1: "Dimanche",
+    day2: "Samedi",
     openH: "11h",
     closeH: "23h",
     note: 4,
@@ -45,6 +47,8 @@ var restaurant2 = Pin(
     name: "La Cagouille",
     address: "10 place Constantin-Brancusi, 75014 Paris",
     coordinates: CLLocationCoordinate2D(latitude: 48.84137607345095, longitude: 2.319338311680679),
+    day1: "Lundi",
+    day2: "Vendredi",
     openH: "14h30",
     closeH: "00h30",
     note: 4,
@@ -62,6 +66,8 @@ var poissonnerie = Pin(
     name: "Montreuil Sur Mer",
     address: "13 rue de l'Eglise, 93100 Montreuil",
     coordinates: CLLocationCoordinate2D(latitude: 48.86404934027263, longitude: 2.4426477644176745),
+    day1: "Samedi",
+    day2: "Samedi",
     openH: "12h",
     closeH: "00h",
     note: 3,
@@ -77,6 +83,8 @@ var commerce = Pin(
     name: "Au Caprice des Mers",
     address: "14 rue Henri Barbusse, Levallois-Perret",
     coordinates: CLLocationCoordinate2D(latitude: 48.8962173418531, longitude: 2.29051349672031),
+    day1: "Lundi",
+    day2: "Vendredi",
     openH: "12h",
     closeH: "00h",
     note: 3,
@@ -92,6 +100,8 @@ var poissonerie2 = Pin(
     name: "Poissonnerie Ledreux",
     address: "67 Av. du Général Leclerc, 75014 Paris",
     coordinates: CLLocationCoordinate2D(latitude: 48.834336117557534, longitude: 2.3295382455062463),
+    day1: "Dimanche",
+    day2: "Samedi",
     openH: "12h",
     closeH: "00h",
     note: 5,
@@ -107,6 +117,8 @@ var restaurant3 = Pin(
     name: "Poissonnerie Ledreux",
     address: "67 Av. du Général Leclerc, 75014 Paris",
     coordinates: CLLocationCoordinate2D(latitude: 48.834336117557534, longitude: 2.3295382455062463),
+    day1: "Vendredi",
+    day2: "Mercredi",
     openH: "12h",
     closeH: "00h",
     note: 5,
@@ -122,6 +134,8 @@ var commerce2 = Pin(
     name: "Sur Mer",
     address: "53 rue de Lancry, 75010 Paris",
     coordinates: CLLocationCoordinate2D(latitude: 48.87584203423585, longitude: 2.3624970423268072),
+    day1: "Dimanche",
+    day2: "Samedi",
     openH: "12h",
     closeH: "00h",
     note: 2,
@@ -240,21 +254,31 @@ struct MapScreen: View {
                         .padding(.leading, 30)
                     
                     HStack {
-                        Text("Ouvert de \(place.openH) à \(place.closeH)")
+                        
+                        Text("Ouvert du \(place.day1) au \(place.day2)")
                             .foregroundStyle(Color.customBleu)
                             .font(.custom("Quicksand_Book", size: 15))
                             .padding(.leading, 30)
                         
-//                        Spacer()
-                        // Rendre les notes dynamiques
-                            
-                        ForEach(0...4, id: \.self) { index in
-                                        Image(systemName: place.note >= index ? "star.fill" : "star")
-                                            .imageScale(.large)
-                                            .foregroundColor(.customMauve)
+                        Text("De \(place.openH) à \(place.closeH)")
+                            .foregroundStyle(Color.customBleu)
+                            .font(.custom("Quicksand_Book", size: 15))
+                            .padding(.leading, 30)
+   
                         
-                            }
                     }
+                    
+                    // Rendre les notes dynamiques
+                    HStack {
+                        
+                        ForEach(0...4, id: \.self) { index in
+                            Image(systemName: place.note >= index ? "star.fill" : "star")
+                                .imageScale(.large)
+                                .foregroundColor(.customMauve)
+                            
+                        }
+                        
+                    }.padding(.leading, 30)
                     
                     Text(place.tags.uppercased())
                         .font(.system(size:15))
