@@ -152,6 +152,8 @@ class MapHelper: ObservableObject {
 // DEBUT DE LA VUE PRINCIPALE
 struct MapScreen: View {
     
+   
+    
   //  @EnvironmentObject var placesData: PlacesData
     @ObservedObject var place : MapHelper = MapHelper()
     
@@ -204,7 +206,7 @@ struct MapScreen: View {
                     MapScaleView()
                 }
                 .safeAreaInset(edge: .bottom) {
-                    NavigationLink(destination: MapDetails(places: $places)) {
+                    NavigationLink(destination: MapDetails(  places: $places)) {
                         Image(systemName: "cross.fill")
                             .foregroundColor(.white)
                     }.frame(width: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, height: 100)
@@ -214,8 +216,19 @@ struct MapScreen: View {
                         .cornerRadius(100)
                         .padding(.leading, 170)
                         .padding(.bottom, 50)
+                        .navigationDestination(for: String.self) { route in
+                            switch route {
+                            case "Map":
+                                MapScreen()
+                            case "MapDetails":
+                                MapDetails(places: $places)
+                            default :
+                                Text("Cette destination n'existe pas")
+                            }
+                        }
                 }
             }
+            
             
         }.sheet(item: $selectedPlace) { place in
             
