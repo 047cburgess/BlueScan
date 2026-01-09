@@ -71,15 +71,20 @@ git clone https://github.com/047cburgess/BlueScan.git
 cd BlueScan
 ```
 
-2. Open the project in Xcode:
-```bash
-open BlueScan.xcodeproj
-```
-*Note: If there's no .xcodeproj file, you may need to create one or the project might use Swift Package Manager*
+2. Create a new Xcode project:
+   - Open Xcode
+   - Create a new iOS App project
+   - Name it "BlueScan"
+   - Add all the Swift files from the cloned repository to your project
+   - Ensure you configure the required capabilities:
+     - Camera usage description in Info.plist
+     - Location services permission in Info.plist
 
-3. Select your target device or simulator
+3. Select your target device or simulator (iOS 16.0+)
 
 4. Build and run the project (⌘ + R)
+
+> **Note**: This repository contains Swift source files. You'll need to set up an Xcode project to build and run the application.
 
 ## 📱 Usage
 
